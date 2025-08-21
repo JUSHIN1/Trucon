@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trucon •</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <style>
+      :root {
+        --bg: #000;
+        --panel: #0b0b0b;
+        --panel-2: #0f0f0f;
+        --card: #0a0a0a;
+        --muted: #a7a7a7;
+        --accent: #00ffff;
+        --accent-2: #1da1f2;
+        --border: #161616;
+        --border-2: #222;
+        --text: #fff;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto,
+          "Helvetica Neue", Arial;
+        overflow: hidden;
+      }
+
+      /* ===== App Shell ===== */
+      .app {
+        display: grid;
+        grid-template-columns: 260px 1fr 320px;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+          "topbar topbar topbar"
+          "sidebar main right";
+        height: 100vh;
+      }
+
+      /* Topbar */
+      .topbar {
+        grid-area: topbar;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        background: linear-gradient(180deg, #050505, rgba(5, 5, 5, 0.6));
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+      }
+      .brand img {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+      .brand span {
+        color: var(--accent);
+      }
+      .top-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+      .iconbtn {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 8px 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: none;
+      }
+      .iconbtn:active {
+        transform: scale(0.98);
+      }
+
+      /* Sidebar (drawer on mobile) */
+      .sidebar {
+        grid-area: sidebar;
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        padding: 16px;
+        overflow: auto;
+      }
+      .sidebar .nav-links button {
+        width: 100%;
+        background: transparent;
+        border: 1px solid var(--border);
+        color: #eaeaea;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: left;
+        margin: 6px 0;
+        cursor: pointer;
+        transition: 0.18s;
+      }
+      .sidebar .nav-links button:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      }
+      .server-status {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .sidebar-footer {
+        margin-top: auto;
+      }
+      .user-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .user-info img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        object-fit: cover;
+      }
+      .username {
+        font-weight: 700;
+      }
+      .usertag {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      /* Rightbar (turns into bottom sheet on mobile) */
+      .rightbar {
+        grid-area: right;
+        background: var(--panel);
+        border-left: 1px solid var(--border);
+        padding: 16px;
+        overflow: auto;
+      }
+      .rightbar h3 {
+        margin: 6px 0 12px;
+        color: var(--accent);
+        font-size: 1.05rem;
+      }
+      .rightbar .card {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 14px;
+      }
+      .rightbar .trending-item {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-2);
+        color: #ddd;
+        cursor: pointer;
+      }
+      .rightbar .trending-item:hover {
+        color: var(--accent);
+      }
+
+      /* Main */
+      .main {
+        grid-area: main;
+        padding: 16px 16px 28px 16px;
+        height: calc(100vh - 50px);
+        overflow: auto;
+      }
+      .hero {
+        background: linear-gradient(
+          90deg,
+          rgba(29, 161, 242, 0.08),
+          transparent
+        );
+        border: 1px solid var(--border);
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        margin: 0 0 6px;
+        font-size: 1.3rem;
+      }
+      .small-muted {
+        color: var(--muted);
+      }
+
+      .feed {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .post {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+        cursor: pointer;
+        transition: transform 0.14s ease, box-shadow 0.14s ease;
+      }
+      .post:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #111;
+        flex-shrink: 0;
+      }
+      .post-body {
+        flex: 1;
+      }
+      .post-head {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .display-name {
+        font-weight: 800;
+      }
+      .handle,
+      .post-date {
+        color: var(--muted);
+      }
+      .post-text {
+        margin-top: 8px;
+        line-height: 1.5;
+        color: #eee;
+      }
+      .post-image {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+        border: 1px solid var(--border);
+      }
+      .actions {
+        display: flex;
+        gap: 14px;
+        margin-top: 10px;
+        color: var(--muted);
+        align-items: center;
+      }
+      .action {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 8px;
+        border-radius: 8px;
+      }
+      .action:hover {
+        background: rgba(29, 161, 242, 0.06);
+        color: var(--accent-2);
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1200;
+        padding: 20px;
+      }
+      .modal-card {
+        width: 100%;
+        max-width: 800px;
+        background: var(--panel);
+        border: 1px solid var(--border-2);
+        border-radius: 14px;
+        padding: 16px;
+        max-height: 88vh;
+        overflow: auto;
+        animation: pop 0.14s cubic-bezier(0.2, 0.9, 0.2, 1);
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .modal-close {
+        float: right;
+        color: var(--muted);
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .comment-box {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .comment-box input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-2);
+        background: #0b0b0b;
+        color: #e7e7e7;
+      }
+      .comment {
+        border-top: 1px solid var(--border);
+        padding: 10px 0;
+        margin-top: 8px;
+        display: flex;
+        gap: 10px;
+      }
+      .comment img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+      }
+
+      /* Tags */
+      .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 8px 0 12px;
+      }
+      .tag {
+        background: #0c1116;
+        border: 1px solid #1b1f23;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: #ddd;
+        cursor: pointer;
+      }
+      .tag.active {
+        background: var(--accent);
+        color: #000;
+        font-weight: 800;
+        border: none;
+      }
+
+      /* Altruism */
+      .altruism-section {
+        background: var(--panel);
+        padding: 18px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+      .impact-showcase {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .impact-card {
+        background: var(--card);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        text-align: center;
+      }
+      .progress-bar-container {
+        background: #222;
+        border-radius: 12px;
+        height: 24px;
+        margin-bottom: 8px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        background: var(--accent-2);
+        transition: width 0.3s;
+      }
+      .testimonial {
+        text-align: center;
+        color: var(--muted);
+        font-style: italic;
+        margin: 10px 0 18px;
+      }
+      .donation-form {
+        background: var(--card);
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      .donation-form input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-2);
+        background: #0b0b0b;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+      .donation-form #card-element {
+        padding: 10px;
+        border: 1px solid var(--border-2);
+        background: #0b0b0b;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+      .btn {
+        background: var(--accent-2);
+        border: none;
+        color: #000;
+        padding: 10px 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 800;
+      }
+      .btn:hover {
+        filter: brightness(1.08);
+      }
+
+      /* Artifacts */
+      .artifact-gallery {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 8px;
+      }
+      .artifact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .artifact-card {
+        background: #0c0c0c;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: 0.18s;
+      }
+      .artifact-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
+      }
+      .artifact-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+      .artifact-content {
+        padding: 12px;
+      }
+      .artifact-content h3 {
+        margin: 0 0 6px;
+      }
+      .artifact-content p {
+        margin: 0;
+        color: #d7d7d7;
+        font-size: 0.95rem;
+      }
+
+      /* Lightbox */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 20px;
+      }
+      .lightbox img {
+        max-width: 90%;
+        max-height: 70vh;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      }
+      .lightbox-caption {
+        color: #fff;
+        margin-top: 14px;
+        max-width: 780px;
+        text-align: center;
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      /* About */
+      .about-section {
+        background: linear-gradient(135deg, #090116d3, #050800e3);
+        color: #fff;
+        padding: 60px 20px;
+        border-radius: 12px;
+      }
+      .about-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        gap: 30px;
+      }
+      .about-image {
+        flex: 1 1 280px;
+        text-align: center;
+      }
+      .about-image img {
+        max-width: 260px;
+        border-radius: 50%;
+        border: 5px solid #493601ea;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
+      .about-text {
+        flex: 2 1 520px;
+      }
+      .about-text h2 {
+        font-size: 2.2rem;
+        margin: 0 0 6px;
+        color: #00c6ff;
+      }
+      .about-text h3 {
+        font-size: 1.6rem;
+        margin: 0 0 12px;
+        font-weight: 800;
+      }
+      .about-text p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+      .about-text .mission {
+        margin-top: 12px;
+        font-size: 1.15rem;
+        color: #ffdf6c;
+      }
+
+      /* Bible */
+      .verse {
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+      }
+      .verse-number {
+        font-weight: 700;
+        color: #f1fffb;
+        margin-right: 6px;
+      }
+      .verse:hover {
+        background: rgba(243, 240, 242, 0.15);
+      }
+      .verse.selected {
+        background: #ff00ff33;
+      }
+
+      /* Off-canvas (mobile) */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        z-index: 45;
+      }
+      .drawer {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        bottom: 0;
+        width: 84vw;
+        max-width: 320px;
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+        z-index: 50;
+        overflow: auto;
+        padding: 14px;
+      }
+      .drawer .nav-links button {
+        margin: 6px 0;
+      }
+      .drawer-open .drawer {
+        transform: translateX(0);
+      }
+      .drawer-open .drawer-overlay {
+        display: block;
+      }
+
+      /* Bottom nav (mobile) */
+      .bottom-nav {
+        display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+        z-index: 60;
+      }
+      .bottom-nav .row {
+        display: flex;
+      }
+      .bottom-nav button {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #ddd;
+        padding: 10px 8px;
+        font-size: 0.9rem;
+      }
+      .bottom-nav button.active {
+        color: var(--accent);
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .app {
+          grid-template-columns: 260px 1fr;
+          grid-template-areas:
+            "topbar topbar"
+            "sidebar main";
+        }
+        .rightbar {
+          display: none;
+        }
+      }
+      @media (max-width: 880px) {
+        body {
+          overflow: auto;
+        }
+        .app {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "topbar"
+            "main";
+        }
+        .sidebar {
+          display: none;
+        }
+        .rightbar {
+          display: none;
+        }
+        .main {
+          height: auto;
+          min-height: calc(100vh - 50px);
+          padding-bottom: 64px;
+        }
+        .bottom-nav {
+          display: block;
+        }
+        .impact-showcase {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .main,
+      .rightbar {
+        overflow-y: scroll;
+        scrollbar-width: none; /* Firefox */
+      }
+      .main::-webkit-scrollbar,
+      .rightbar::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+      }
+
+      .page {
+        padding: 0%; /* remove large top padding */
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      #home .card:first-child {
+        margin-top: 10px; /* just a tiny breathing space */
+      }
+
+      @media (max-width: 600px) {
+        .top-nav {
+          height: 50px;
+          font-size: 14px;
+        }
+
+        .side-menu button {
+          font-size: 14px;
+          padding: 12px;
+        }
+
+        .app-title {
+          font-size: 40px;
+        }
+      }
+
+      /* Hide by default */
+      #mobileSearch {
+        display: none;
+      }
+
+      /* Mobile view only */
+      @media (max-width: 80px) {
+        #mobileSearch {
+          display: block;
+          position: absolute; /* overlay inside navbar */
+          top: 8px;
+          left: 50px; /* leave space for the back/quick buttons */
+          right: 10px;
+          padding: 6px 10px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 80px;
+          background: #918989;
+          z-index: 10;
+        }
+
+        /* Optional: hide quick search button since we always show bar */
+        #quickSearchBtn {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- ===== Topbar ===== -->
+      <header class="topbar">
+        <button class="iconbtn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="brand">
+          <img src="pics/trucon11.png" alt="Trucon" /><span>Trucon</span>
+        </div>
+        <div class="top-actions">
+          <button class="iconbtn" id="quickSearchBtn" title="Search">🔎</button>
+          <input type="text" id="mobileSearch" placeholder="Search..." />
+          <button class="iconbtn" id="themeBtn" title="Theme">🌓</button>
+        </div>
+      </header>
+
+      <!-- ===== Sidebar (desktop) ===== -->
+      <nav class="sidebar">
+        <div
+          class="sidebar-trucon11"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+          "
+        >
+          <img
+            src="pics/trucon11.png"
+            alt="Trucon11 Logo"
+            class="trucon11-img"
+            style="
+              width: 120px;
+              height: 120px;
+              border-radius: 12px;
+              object-fit: cover;
+            "
+          />
+        </div>
+        <div class="nav-links">
+          <button data-page="home">Home</button>
+          <button data-page="discover">Discover</button>
+          <button data-page="bible">Bible</button>
+          <button data-page="artifacts">Artifacts</button>
+          <button data-page="altruism">Altruism</button>
+          <button data-page="about">About</button>
+          <button data-page="contact">Contact</button>
+        </div>
+        <div class="server-status">
+          Server: <span id="serverStatus">checking...</span>
+        </div>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <img id="sidebarAvatar" src="pics/logo.jpg" alt="you" />
+            <div>
+              <div class="username">Just-In</div>
+              <div class="usertag">Veil of Veritus</div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- ===== Main ===== -->
+      <main class="main">
+        <!-- Home -->
+        <section id="home" class="page active">
+          <div class="hero">
+            <h1>Welcome to Trucon</h1>
+            <p class="small-muted">
+              Bringing you all truth from all angles and edges of Earth.
+            </p>
+          </div>
+          <h3 style="margin: 6px 0 12px">Featured</h3>
+          <div id="featured" class="feed"></div>
+          <div id="feed" class="feed"></div>
+        </section>
+
+        <!-- Artifacts -->
+        <section id="artifacts" class="page">
+          <div class="artifact-gallery">
+            <h2>Ancient Artifacts</h2>
+            <div id="artifactsContainer" class="artifact-grid"></div>
+          </div>
+          <!-- Lightbox -->
+          <div id="lightbox" class="lightbox" role="dialog" aria-modal="true">
+            <span class="lightbox-close" aria-label="Close">&times;</span>
+            <img id="lightbox-img" src="" alt="" />
+            <div class="lightbox-caption">
+              <h3 id="lightbox-title"></h3>
+              <p id="lightbox-desc"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Altruism -->
+        <section id="altruism" class="page">
+          <div class="altruism-section">
+            <h2 style="text-align: center; margin-bottom: 16px">
+              Our Altruism Initiative: Saving Lives Through Your Generosity
+            </h2>
+            <div class="impact-showcase">
+              <div class="impact-card">
+                <h4>Meals Provided</h4>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 75%"></div>
+                </div>
+                <p>
+                  We've delivered 15,000 meals to families in need. Help us
+                  reach 20,000!
+                </p>
+              </div>
+              <div class="impact-card">
+                <h4>Children Educated</h4>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 10%"></div>
+                </div>
+                <p>
+                  Your donations have sponsored education for 500 children.
+                  Let's aim for 1,000 this year!
+                </p>
+              </div>
+              <div class="impact-card">
+                <h4>Medical Aid Given</h4>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 15%"></div>
+                </div>
+                <p>
+                  We've provided healthcare to 2,500 individuals. Every dollar
+                  counts.
+                </p>
+              </div>
+            </div>
+            <div class="testimonial">
+              “Your donation changed my life. I can now feed my family and send
+              my kids to school. Thank you!” — Ugandan families rejoicing
+            </div>
+            <div class="donation-form">
+              <h4 style="text-align: center; margin-bottom: 10px">
+                Make a Difference Today
+              </h4>
+              <p style="text-align: center; color: var(--muted); margin-top: 0">
+                Donate securely via MasterCard, Visa, or other cards.
+              </p>
+              <form id="donation-form">
+                <label
+                  for="amount"
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    color: var(--muted);
+                  "
+                  >Donation Amount ($)</label
+                >
+                <input
+                  type="number"
+                  id="amount"
+                  placeholder="Enter amount (e.g., 10)"
+                  min="1"
+                  required
+                />
+                <label
+                  for="card-element"
+                  style="display: block; margin: 6px 0; color: var(--muted)"
+                  >Card Details</label
+                >
+                <div id="card-element"></div>
+                <div
+                  id="card-errors"
+                  style="color: #ff6161; margin: 8px 0"
+                ></div>
+                <button type="submit" class="btn" style="width: 100%">
+                  Donate Now
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="progress-updates" style="margin-top: 16px">
+            <h3 style="text-align: center; margin-bottom: 10px">
+              Progress Updates
+            </h3>
+            <div id="progress-notes"></div>
+            <div id="media-gallery" class="feed"></div>
+          </div>
+        </section>
+
+        <!-- Bible -->
+        <section
+          id="bible"
+          class="page"
+          style="
+            display: none;
+            padding: 12px;
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+          "
+        >
+          <div id="biblePage">
+            <h2 style="color: #e0d8e0; text-shadow: 0 0 10px #7a7200">
+              King James Bible
+            </h2>
+            <div
+              style="
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-bottom: 10px;
+              "
+            >
+              <select
+                id="bibleBook"
+                class="iconbtn"
+                style="padding: 6px"
+              ></select>
+              <select
+                id="bibleChapter"
+                class="iconbtn"
+                style="padding: 6px"
+              ></select>
+              <select
+                id="bibleVerse"
+                class="iconbtn"
+                style="padding: 6px"
+              ></select>
+            </div>
+            <div
+              id="bibleText"
+              style="
+                background: #111;
+                padding: 14px;
+                border: 1px solid var(--accent);
+                border-radius: 8px;
+                line-height: 1.6;
+              "
+            >
+              Select a book and chapter to begin reading.
+            </div>
+          </div>
+        </section>
+
+        <!-- Discover -->
+        <section id="discover" class="page" style="display: none">
+          <h1>Discover</h1>
+          <p class="small-muted">
+            Click a topic to filter posts. Trending topics are based on number
+            of posts per category.
+          </p>
+          <div id="trending" class="tags"></div>
+          <h4 style="margin-top: 10px">Results</h4>
+          <div id="discoverFeed" class="feed"></div>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="page">
+          <div class="about-section">
+            <div class="about-container">
+              <div class="about-image">
+                <img src="pics/eeee.jpeg" alt="Bakama Justin" />
+              </div>
+              <div class="about-text">
+                <h2>About Me</h2>
+                <h3>Bakama Justin</h3>
+                <p>
+                  I am <strong>Bakama Justin</strong>, a passionate truth-seeker
+                  and knowledge curator from Uganda. My vision is to uncover and
+                  share the hidden details of our history, culture, and world —
+                  no matter how small they may seem.
+                </p>
+                <p>
+                  With a deep belief that
+                  <strong>knowledge empowers humanity</strong>, my mission is to
+                  ensure that people everywhere gain access to truth, evidence,
+                  and understanding in every possible way.
+                </p>
+                <p>
+                  Through this platform, I dedicate myself to presenting
+                  <strong>artifacts, discoveries, and insights</strong> that
+                  challenge assumptions and inspire curiosity.
+                </p>
+                <p class="mission">
+                  <em
+                    >My goal: To make knowledge available, accessible, and
+                    unforgettable.</em
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="page" style="display: none">
+          <h1>Contact</h1>
+          <div
+            class="rightbar card"
+            style="
+              position: static;
+              border: none;
+              background: transparent;
+              padding: 0;
+            "
+          >
+            <form
+              id="contactForm"
+              onsubmit="submitContact(event)"
+              class="donation-form"
+              style="max-width: 640px"
+            >
+              <input id="contactName" placeholder="Your name" required />
+              <input id="contactEmail" placeholder="Email (optional)" />
+              <textarea
+                id="contactMessage"
+                rows="4"
+                placeholder="Message"
+                required
+                style="resize: vertical"
+              ></textarea>
+              <button class="btn" style="margin-top: 8px">Save</button>
+            </form>
+            <div id="savedMessages" style="margin-top: 12px"></div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ===== Rightbar (desktop) ===== -->
+      <aside class="rightbar">
+        <div class="card">
+          <h3>Search</h3>
+          <input
+            id="search"
+            placeholder="Search..."
+            oninput="onSearch()"
+            style="
+              width: 100%;
+              padding: 10px;
+              border-radius: 10px;
+              background: #0b0b0b;
+              border: 1px solid var(--border-2);
+              color: #fff;
+              margin-bottom: 8px;
+            "
+          />
+          <select
+            id="categorySelect"
+            onchange="applySelectCategory(this.value)"
+            style="
+              width: 100%;
+              padding: 10px;
+              border-radius: 10px;
+              background: #0b0b0b;
+              border: 1px solid var(--border-2);
+              color: #fff;
+            "
+          >
+            <option value="">All categories</option>
+          </select>
+        </div>
+        <div class="card">
+          <div
+            class="quote-section"
+            style="padding: 12px; background: #1f1c1fe3; border-radius: 8px"
+          >
+            <blockquote
+              style="
+                margin: 0;
+                border-left: 5px solid #5b5b5b;
+                padding-left: 10px;
+                color: #eee;
+                font-style: italic;
+              "
+            >
+              “And you will know the truth and it will set you free.” — Jesus
+              Christ
+            </blockquote>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <nav class="drawer" id="drawerNav" aria-hidden="true" style="width: 160px">
+      <div class="nav-links">
+        <button data-page="about">About</button>
+      </div>
+      <div class="server-status">
+        Server: <span id="serverStatusMobile">checking...</span>
+      </div>
+    </nav>
+
+    <!-- Bottom Nav (mobile) -->
+    <nav class="bottom-nav" id="bottomNav">
+      <div class="row">
+        <button data-page="home" class="active">Home</button>
+        <button data-page="discover">Discover</button>
+        <button data-page="bible">Bible</button>
+        <button data-page="artifacts">Artifacts</button>
+        <button data-page="contact">Contact</button>
+      </div>
+    </nav>
+
+    <!-- Template for posts -->
+    <template id="postTpl">
+      <article class="post">
+        <img class="avatar" src="pics/k.png" alt="avatar" />
+        <div class="post-body">
+          <div class="post-head">
+            <div class="display-name">Bakama Justin</div>
+            <div class="handle">@christfollower</div>
+            <div class="post-date" style="margin-left: auto"></div>
+          </div>
+          <div class="post-text"></div>
+          <img class="post-image" style="display: none" alt="post image" />
+          <div class="actions">
+            <div class="action likeAction">
+              ❤️ <span class="count likeCount">0</span>
+            </div>
+            <div class="action starAction">
+              ⭐ <span class="count starCount">0</span>
+            </div>
+            <div class="action commentAction">
+              💬 <span class="count commentCount">0</span>
+            </div>
+            <div class="action shareAction">
+              🔗 <span class="count shareCount">0</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      // ===== Utilities =====
+      const API_BASE = "/api";
+      let serverAvailable = false;
+      const LS_PREFIX = "truthbeacon_";
+      const avatarDefault = "pics/k.png";
+      const qs = (s) => document.querySelector(s);
+      const qsa = (s) => Array.from(document.querySelectorAll(s));
+      const lsKey = (k) => LS_PREFIX + k;
+      const readJSON = (k) => {
+        try {
+          return JSON.parse(localStorage.getItem(k));
+        } catch {
+          return null;
+        }
+      };
+      const writeJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+      // ===== App Navigation =====
+      // ===== App Navigation =====
+      function showPage(id) {
+        qsa(".page").forEach((p) => (p.style.display = "none"));
+        const page = document.getElementById(id);
+        if (page) page.style.display = "block";
+
+        // bottom nav active
+        qsa(".bottom-nav button").forEach((b) =>
+          b.classList.toggle("active", b.dataset.page === id)
+        );
+
+        // ensure bible books loaded on demand
+        if (id === "bible" && bookSelect && bookSelect.options.length <= 1) {
+          populateBibleBooks();
+        }
+      }
+
+      // ===== Run on load =====
+      document.addEventListener("DOMContentLoaded", () => {
+        showPage("home"); // show home by default
+      });
+
+      function bindNavButtons(scope = document) {
+        scope.querySelectorAll("[data-page]")?.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            showPage(btn.dataset.page);
+            closeDrawer();
+          });
+        });
+      }
+
+      // Topbar actions
+      const menuBtn = qs("#menuBtn");
+      const drawerOverlay = qs("#drawerOverlay");
+      const drawerNav = qs("#drawerNav");
+      function openDrawer() {
+        document.body.classList.add("drawer-open");
+        drawerNav.setAttribute("aria-hidden", "false");
+      }
+      function closeDrawer() {
+        document.body.classList.remove("drawer-open");
+        drawerNav.setAttribute("aria-hidden", "true");
+      }
+      menuBtn.addEventListener("click", openDrawer);
+      drawerOverlay.addEventListener("click", closeDrawer);
+      bindNavButtons(document);
+
+      const quickSearchBtn = document.getElementById("quickSearchBtn");
+      const mobileSearch = document.getElementById("mobileSearch");
+
+      if (quickSearchBtn && mobileSearch) {
+        quickSearchBtn.addEventListener("click", () => {
+          // Toggle visibility
+          if (mobileSearch.style.display === "block") {
+            mobileSearch.style.display = "none";
+          } else {
+            mobileSearch.style.display = "block";
+            setTimeout(() => {
+              mobileSearch.focus();
+              mobileSearch.click(); // trigger keyboard on mobile
+            }, 120);
+          }
+        });
+
+        // Run search when pressing Enter
+        mobileSearch.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            runSearch(mobileSearch.value); // your search logic
+          }
+        });
+      }
+
+      if (mobileSearch) {
+        mobileSearch.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            runSearch(mobileSearch.value); // call your search logic
+          }
+        });
+      }
+
+      // Quick search shortcut
+      qs("#quickSearchBtn").addEventListener("click", () => {
+        const input = document.getElementById("search");
+        if (input) {
+          input.focus();
+          input.click(); // triggers mobile keyboard
+          input.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+
+      // Simple theme toggle (dark only for now; hook-ready for light)
+      qs("#themeBtn").addEventListener("click", () => {
+        document.documentElement.classList.toggle("light");
+      });
+
+      // ===== Server check =====
+      async function checkServer() {
+        try {
+          const r = await fetch(API_BASE + "/ping", { cache: "no-store" });
+          serverAvailable = r.ok;
+        } catch {
+          serverAvailable = false;
+        }
+        qs("#serverStatus").textContent = serverAvailable
+          ? "available"
+          : "offline";
+        const mobileStatus = qs("#serverStatusMobile");
+        if (mobileStatus)
+          mobileStatus.textContent = serverAvailable ? "available" : "offline";
+      }
+
+      // ===== Posts =====
+      async function loadPosts() {
+        await checkServer();
+        try {
+          let posts = [];
+          if (serverAvailable) {
+            const r = await fetch(API_BASE + "/posts");
+            posts = await r.json();
+          } else {
+            const md = await (await fetch("posts.md")).text();
+            posts = parsePostsMd(md);
+          }
+          renderPosts(posts);
+          populateCategories(posts);
+          renderDiscover(posts);
+        } catch (e) {
+          qs(
+            "#feed"
+          ).innerHTML = `<div style="padding:12px;border:1px solid #222;border-radius:8px;color:var(--muted)">Error loading posts: ${e.message}</div>`;
+        }
+      }
+
+      function parsePostsMd(md) {
+        const blocks = md
+          .split(/^---\s*$/m)
+          .map((b) => b.trim())
+          .filter(Boolean);
+        return blocks
+          .map((block, idx) => {
+            const lines = block.split(/\r?\n/);
+            let meta = {},
+              i = 0;
+            while (i < lines.length && lines[i].trim() !== "") {
+              const m = lines[i].match(/^([a-zA-Z0-9_-]+)\s*:\s*(.*)$/);
+              if (m) {
+                meta[m[1].toLowerCase()] = m[2].trim();
+                i++;
+              } else break;
+            }
+            const content = lines.slice(i).join("\n").trim();
+            return {
+              id: idx,
+              title: meta.title || "",
+              date: meta.date || "",
+              category: (meta.category || "").toLowerCase(),
+              image: meta.image || "",
+              content,
+              author: meta.author || "Bakama Justin",
+              handle: meta.handle || "@christfollower",
+              avatar: meta.avatar || avatarDefault,
+            };
+          })
+          .reverse();
+      }
+
+      function populateCategories(posts) {
+        const sel = document.getElementById("categorySelect");
+        const categories = [
+          ...new Set(posts.map((p) => p.category).filter(Boolean)),
+        ];
+        sel.innerHTML = '<option value="">All categories</option>';
+        categories.forEach((c) => {
+          const opt = document.createElement("option");
+          opt.value = c;
+          opt.textContent = c;
+          sel.appendChild(opt);
+        });
+      }
+
+      async function renderPosts(posts) {
+        const feed = qs("#feed");
+        feed.innerHTML = "";
+        for (const p of posts) {
+          const node = await createPostNode(p);
+          feed.appendChild(node);
+        }
+        updateSidebarAuthor(posts);
+      }
+
+      function updateSidebarAuthor(posts) {
+        if (!posts.length) return;
+        const latest = posts[0];
+        const sidebarAvatar = qs("#sidebarAvatar");
+        const usernameEl = document.querySelector(".username");
+        const usertagEl = document.querySelector(".usertag");
+        if (sidebarAvatar) {
+          sidebarAvatar.src = latest.avatar || avatarDefault;
+          sidebarAvatar.onerror = () => {
+            sidebarAvatar.src = avatarDefault;
+          };
+        }
+        if (usernameEl)
+          usernameEl.textContent = latest.author || "Truth Beacon";
+        if (usertagEl) usertagEl.textContent = latest.handle || "@unknown";
+      }
+
+      async function createPostNode(post) {
+        const tpl = document.getElementById("postTpl").content.cloneNode(true);
+        const avatarImg = tpl.querySelector(".avatar");
+        const finalAvatar = post.avatar || avatarDefault;
+        avatarImg.onerror = null;
+        avatarImg.src = "";
+        avatarImg.src = finalAvatar; // force reload
+        avatarImg.onerror = () => {
+          avatarImg.onerror = null;
+          avatarImg.src = avatarDefault;
+        };
+
+        tpl.querySelector(".display-name").textContent = post.author;
+        tpl.querySelector(".handle").textContent = post.handle;
+        tpl.querySelector(".post-date").textContent = post.date || "";
+        tpl.querySelector(".post-text").innerHTML = marked.parse(
+          post.content || ""
+        );
+
+        const imgEl = tpl.querySelector(".post-image");
+        if (post.image) {
+          imgEl.src = post.image;
+          imgEl.style.display = "block";
+        }
+
+        const likeCountEl = tpl.querySelector(".likeCount");
+        const starCountEl = tpl.querySelector(".starCount");
+        const commentCountEl = tpl.querySelector(".commentCount");
+        const shareCountEl = tpl.querySelector(".shareCount");
+
+        if (serverAvailable) {
+          try {
+            const r = await fetch(`${API_BASE}/post/${post.id}/stats`);
+            if (r.ok) {
+              const s = await r.json();
+              likeCountEl.textContent = s.likes || 0;
+              commentCountEl.textContent = s.comments?.length || 0;
+              shareCountEl.textContent = s.shares || 0;
+              starCountEl.textContent = s.stars || 0;
+            }
+          } catch {}
+        } else {
+          likeCountEl.textContent =
+            parseInt(localStorage.getItem(lsKey(`likes_${post.id}`))) || 0;
+          commentCountEl.textContent = (
+            readJSON(lsKey(`comments_${post.id}`)) || []
+          ).length;
+          shareCountEl.textContent =
+            parseInt(localStorage.getItem(lsKey(`shares_${post.id}`))) || 0;
+          starCountEl.textContent =
+            parseInt(localStorage.getItem(lsKey(`stars_${post.id}`))) || 0;
+        }
+
+        const starBtn = tpl.querySelector(".starAction");
+        const isStarred = !!readJSON(lsKey(`starred_${post.id}`));
+        if (isStarred) starBtn.classList.add("starred");
+
+        starBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const cur = parseInt(
+            localStorage.getItem(lsKey(`stars_${post.id}`)) || 0
+          );
+          if (!readJSON(lsKey(`starred_${post.id}`))) {
+            localStorage.setItem(lsKey(`stars_${post.id}`), cur + 1);
+            writeJSON(lsKey(`starred_${post.id}`), true);
+            starBtn.classList.add("starred");
+            starCountEl.textContent = cur + 1;
+          } else {
+            const newVal = Math.max(0, cur - 1);
+            localStorage.setItem(lsKey(`stars_${post.id}`), newVal);
+            writeJSON(lsKey(`starred_${post.id}`), false);
+            starBtn.classList.remove("starred");
+            starCountEl.textContent = newVal;
+          }
+        });
+
+        tpl.querySelector(".likeAction").addEventListener("click", (e) => {
+          e.stopPropagation();
+          const cur = parseInt(
+            localStorage.getItem(lsKey(`likes_${post.id}`)) || 0
+          );
+          localStorage.setItem(lsKey(`likes_${post.id}`), cur + 1);
+          likeCountEl.textContent = cur + 1;
+        });
+
+        tpl.querySelector(".shareAction").addEventListener("click", (e) => {
+          e.stopPropagation();
+          const cur = parseInt(
+            localStorage.getItem(lsKey(`shares_${post.id}`)) || 0
+          );
+          localStorage.setItem(lsKey(`shares_${post.id}`), cur + 1);
+          shareCountEl.textContent = cur + 1;
+          navigator.clipboard?.writeText(location.href);
+          flash("Link copied");
+        });
+
+        tpl
+          .querySelector(".commentAction")
+          .addEventListener("click", () => openModal(post));
+        tpl
+          .querySelector(".post")
+          .addEventListener("click", () => openModal(post));
+        return tpl;
+      }
+
+      // ===== Modal =====
+      async function openModal(post) {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        const card = document.createElement("div");
+        card.className = "modal-card";
+        modal.appendChild(card);
+
+        let comments = readJSON(lsKey(`comments_${post.id}`)) || [];
+        const likes =
+          parseInt(localStorage.getItem(lsKey(`likes_${post.id}`))) || 0;
+        const shares =
+          parseInt(localStorage.getItem(lsKey(`shares_${post.id}`))) || 0;
+        const stars =
+          parseInt(localStorage.getItem(lsKey(`stars_${post.id}`))) || 0;
+
+        card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;gap:10px;align-items:center">
+          <img src="${
+            post.avatar || avatarDefault
+          }" onerror="this.onerror=null;this.src='${avatarDefault}'" style="width:56px;height:56px;border-radius:50%" alt="avatar">
+          <div>
+            <div style="font-weight:700">${
+              post.author
+            } <span style="color:#888">${post.handle}</span></div>
+            <div style="color:#888;font-size:.9rem">${post.date || ""} ${
+          post.category ? "• " + post.category : ""
+        }</div>
+          </div>
+        </div>
+        <div class="modal-close" aria-label="Close">&times;</div>
+      </div>
+      <div style="margin-top:10px">${marked.parse(post.content || "")}</div>
+      ${
+        post.image
+          ? `<img src="${post.image}" style="width:100%;border-radius:10px;margin-top:12px" alt="post image">`
+          : ""
+      }
+      <div class="actions" style="margin-top:12px">
+        <div class="action modalLike">❤️ <span class="count">${likes}</span></div>
+        <div class="action modalStar">⭐ <span class="count">${stars}</span></div>
+        <div class="action modalShare">🔗 <span class="count">${shares}</span></div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-weight:700">Comments</div>
+        <div id="commentsList"></div>
+        <div class="comment-box">
+          <input id="commentName" placeholder="Name" value="you" style="max-width:120px">
+          <input id="commentText" placeholder="Add a comment...">
+          <button id="postComment" class="btn">Post</button>
+        </div>
+      </div>`;
+
+        document.body.appendChild(modal);
+        const commentsList = card.querySelector("#commentsList");
+        const renderComments = () => {
+          commentsList.innerHTML = comments
+            .map(
+              (c) => `
+        <div class="comment">
+          <img src="${
+            c.avatar || avatarDefault
+          }" onerror="this.onerror=null;this.src='${avatarDefault}'" alt="avatar">
+          <div>
+            <strong>${c.name}</strong>
+            <div style="color:#888;font-size:.9rem">${new Date(
+              c.ts
+            ).toLocaleString()}</div>
+            <div style="margin-top:6px">${c.text}</div>
+          </div>
+        </div>`
+            )
+            .join("");
+        };
+        renderComments();
+
+        card
+          .querySelector(".modal-close")
+          .addEventListener("click", () => modal.remove());
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) modal.remove();
+        });
+
+        card.querySelector("#postComment").addEventListener("click", () => {
+          const name = card.querySelector("#commentName").value || "you";
+          const text = card.querySelector("#commentText").value.trim();
+          if (!text) return;
+          const comment = { name, text, ts: Date.now(), avatar: avatarDefault };
+          comments.push(comment);
+          writeJSON(lsKey(`comments_${post.id}`), comments);
+          renderComments();
+          card.querySelector("#commentText").value = "";
+          flash("Comment posted");
+        });
+
+        ["modalLike", "modalStar", "modalShare"].forEach((cls) => {
+          card.querySelector("." + cls).addEventListener("click", () => {
+            const el = card.querySelector("." + cls + " .count");
+            el.textContent = parseInt(el.textContent) + 1;
+            flash("Action recorded");
+          });
+        });
+      }
+
+      // ===== Discover =====
+      function renderDiscover(posts) {
+        const tagsEl = document.getElementById("trending");
+        tagsEl.innerHTML = "";
+        const counts = {};
+        posts.forEach((p) => {
+          if (p.category) counts[p.category] = (counts[p.category] || 0) + 1;
+        });
+        Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([cat, cnt]) => {
+            const tag = document.createElement("div");
+            tag.className = "tag";
+            tag.textContent = `${cat} (${cnt})`;
+            tag.addEventListener("click", () => {
+              const filtered = posts.filter((p) => p.category === cat);
+              const feed = document.getElementById("discoverFeed");
+              feed.innerHTML = "";
+              filtered.forEach((p) =>
+                createPostNode(p).then((n) => feed.appendChild(n))
+              );
+              qsa(".tag").forEach((t) => t.classList.remove("active"));
+              tag.classList.add("active");
+            });
+            tagsEl.appendChild(tag);
+          });
+      }
+
+      // ===== Search & Category Filter =====
+      function onSearch() {
+        const q = document.getElementById("search").value.trim().toLowerCase();
+        if (!q) {
+          qsa(".post").forEach((p) => (p.style.display = ""));
+          return;
+        }
+        // debounce-lite
+        setTimeout(() => {
+          qsa(".post").forEach((p) => {
+            p.style.display = p.innerText.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        }, 80);
+      }
+      function applySelectCategory(val) {
+        if (!val) {
+          qsa(".post").forEach((p) => (p.style.display = ""));
+          return;
+        }
+        qsa(".post").forEach((p) => {
+          const handle =
+            p.querySelector(".handle")?.textContent.toLowerCase() || "";
+          p.style.display = handle.includes(val) ? "" : "none";
+        });
+      }
+
+      // ===== Contact =====
+      function submitContact(e) {
+        e.preventDefault();
+        const name = qs("#contactName").value;
+        const email = qs("#contactEmail").value;
+        const msg = qs("#contactMessage").value;
+        const saved = readJSON(lsKey("contacts")) || [];
+        saved.push({ name, email, msg, ts: Date.now() });
+        writeJSON(lsKey("contacts"), saved);
+        renderSavedMessages();
+        e.target.reset();
+        flash("Message saved");
+      }
+      function renderSavedMessages() {
+        const saved = readJSON(lsKey("contacts")) || [];
+        const out = qs("#savedMessages");
+        out.innerHTML = saved.length
+          ? saved
+              .map(
+                (s) => `
+      <div style="padding:10px;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+        <strong>${s.name}</strong>
+        <div style="color:#888;font-size:.9rem">${new Date(
+          s.ts
+        ).toLocaleString()}</div>
+        <div style="margin-top:6px">${s.msg}</div>
+      </div>`
+              )
+              .join("")
+          : '<div style="color:#888">No messages</div>';
+      }
+
+      // ===== Bible =====
+      const chapterCounts = {
+        Genesis: 50,
+        Exodus: 40,
+        Leviticus: 27,
+        Numbers: 36,
+        Deuteronomy: 34,
+        Joshua: 24,
+        Judges: 21,
+        Ruth: 4,
+        "1 Samuel": 31,
+        "2 Samuel": 24,
+        "1 Kings": 22,
+        "2 Kings": 25,
+        "1 Chronicles": 29,
+        "2 Chronicles": 36,
+        Ezra: 10,
+        Nehemiah: 13,
+        Esther: 10,
+        Job: 42,
+        Psalms: 150,
+        Proverbs: 31,
+        Ecclesiastes: 12,
+        "Song of Solomon": 8,
+        Isaiah: 66,
+        Jeremiah: 52,
+        Lamentations: 5,
+        Ezekiel: 48,
+        Daniel: 12,
+        Hosea: 14,
+        Joel: 3,
+        Amos: 9,
+        Obadiah: 1,
+        Jonah: 4,
+        Micah: 7,
+        Nahum: 3,
+        Habakkuk: 3,
+        Zephaniah: 3,
+        Haggai: 2,
+        Zechariah: 14,
+        Malachi: 4,
+        Matthew: 28,
+        Mark: 16,
+        Luke: 24,
+        John: 21,
+        Acts: 28,
+        Romans: 16,
+        "1 Corinthians": 16,
+        "2 Corinthians": 13,
+        Galatians: 6,
+        Ephesians: 6,
+        Philippians: 4,
+        Colossians: 4,
+        "1 Thessalonians": 5,
+        "2 Thessalonians": 3,
+        "1 Timothy": 6,
+        "2 Timothy": 4,
+        Titus: 3,
+        Philemon: 1,
+        Hebrews: 13,
+        James: 5,
+        "1 Peter": 5,
+        "2 Peter": 3,
+        "1 John": 5,
+        "2 John": 1,
+        "3 John": 1,
+        Jude: 1,
+        Revelation: 22,
+      };
+      const bibleBooks = Object.keys(chapterCounts);
+      const bookSelect = document.getElementById("bibleBook");
+      const chapterSelect = document.getElementById("bibleChapter");
+      const verseSelect = document.getElementById("bibleVerse");
+      const bibleText = document.getElementById("bibleText");
+      let selectedVerses = [];
+
+      function populateBibleBooks() {
+        if (!bookSelect) return;
+        bookSelect.innerHTML = '<option value="">Select Book</option>';
+        bibleBooks.forEach((book) => {
+          const opt = document.createElement("option");
+          opt.value = book;
+          opt.textContent = book;
+          bookSelect.appendChild(opt);
+        });
+      }
+
+      bookSelect?.addEventListener("change", () => {
+        const selectedBook = bookSelect.value;
+        const chapters = chapterCounts[selectedBook] || 1;
+        chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
+        for (let i = 1; i <= chapters; i++) {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.textContent = i;
+          chapterSelect.appendChild(opt);
+        }
+        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+      });
+      chapterSelect?.addEventListener("change", () => {
+        if (bookSelect.value && chapterSelect.value) loadBible();
+      });
+      verseSelect?.addEventListener("change", () => {
+        const num = verseSelect.value;
+        if (!num) return;
+        const el = document.querySelector(`.verse[data-verse="${num}"]`);
+        if (el) toggleVerseSelection(num, el);
+      });
+
+      async function loadBible() {
+        const book = bookSelect.value;
+        const chapter = chapterSelect.value;
+        if (!book || !chapter) return;
+        bibleText.innerHTML = "Loading...";
+        try {
+          const res = await fetch(
+            `https://bible-api.com/${encodeURIComponent(
+              book
+            )}%20${chapter}?translation=kjv`
+          );
+          if (!res.ok) throw new Error("Failed to fetch");
+          const data = await res.json();
+          const versesHTML = data.verses
+            .map(
+              (v) =>
+                `<p class="verse" data-verse="${
+                  v.verse
+                }"><span class="verse-number">${
+                  v.verse
+                }</span> ${v.text.trim()}</p>`
+            )
+            .join("");
+          bibleText.innerHTML =
+            `<h3 style="color:#ff00ff">${data.reference}</h3>` + versesHTML;
+          verseSelect.innerHTML = '<option value="">Select Verse</option>';
+          data.verses.forEach((v) => {
+            const opt = document.createElement("option");
+            opt.value = v.verse;
+            opt.textContent = `Verse ${v.verse}`;
+            verseSelect.appendChild(opt);
+          });
+          document.querySelectorAll(".verse").forEach((verse) => {
+            verse.addEventListener("click", () => {
+              const num = verse.getAttribute("data-verse");
+              toggleVerseSelection(num, verse);
+            });
+          });
+        } catch (err) {
+          bibleText.innerHTML = `<span style="color:red">Failed to load Bible. Check internet.</span>`;
+        }
+      }
+      function toggleVerseSelection(verseNumber, element) {
+        if (selectedVerses.includes(verseNumber)) {
+          selectedVerses = selectedVerses.filter((v) => v !== verseNumber);
+          element.classList.remove("selected");
+        } else {
+          selectedVerses.push(verseNumber);
+          element.classList.add("selected");
+        }
+      }
+
+      // ===== Artifacts =====
+      const artifacts = [
+        {
+          title: "Rosetta Stone",
+          description:
+            "A granodiorite stele inscribed with three versions of a decree issued in Memphis, Egypt, in 196 BC.",
+          image: "pics/rosetta-stone.jpg",
+        },
+        {
+          title: "Terracotta Army",
+          description:
+            "A collection of terracotta sculptures depicting the armies of Qin Shi Huang, the first Emperor of China.",
+          image: "pics/terracotta-army.jpg",
+        },
+        {
+          title: "Dead Sea Scrolls",
+          description:
+            "Ancient Jewish religious manuscripts found in the Qumran Caves near the Dead Sea.",
+          image: "pics/dead-sea-scrolls.jpg",
+        },
+      ];
+      const container = document.getElementById("artifactsContainer");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const lightboxTitle = document.getElementById("lightbox-title");
+      const lightboxDesc = document.getElementById("lightbox-desc");
+      const closeBtn = document.querySelector(".lightbox-close");
+      function renderArtifacts() {
+        container.innerHTML = "";
+        artifacts.forEach((artifact) => {
+          const card = document.createElement("div");
+          card.className = "artifact-card";
+          card.innerHTML = `<img src="${artifact.image}" alt="${artifact.title}"><div class="artifact-content"><h3>${artifact.title}</h3><p>${artifact.description}</p></div>`;
+          card.addEventListener("click", () => {
+            lightbox.style.display = "flex";
+            lightboxImg.src = artifact.image;
+            lightboxTitle.textContent = artifact.title;
+            lightboxDesc.textContent = artifact.description;
+          });
+          container.appendChild(card);
+        });
+      }
+      closeBtn.addEventListener(
+        "click",
+        () => (lightbox.style.display = "none")
+      );
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) lightbox.style.display = "none";
+      });
+
+      // ===== Feedback / Toast =====
+      function flash(msg) {
+        const el = document.createElement("div");
+        Object.assign(el.style, {
+          position: "fixed",
+          left: "50%",
+          transform: "translateX(-50%)",
+          bottom: "72px",
+          background: "#111",
+          color: "#fff",
+          padding: "8px 12px",
+          borderRadius: "10px",
+          border: "1px solid #222",
+          zIndex: 1000,
+        });
+        el.textContent = msg;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+      }
+
+      // ===== Init =====
+      (async () => {
+        bindNavButtons(qs(".drawer"));
+        await loadPosts();
+        renderSavedMessages();
+        renderArtifacts();
+        // Default page for small screens
+        if (matchMedia("(max-width: 880px)").matches) {
+          showPage("home");
+        }
+      })();
+    </script>
+  </body>
+</html>
