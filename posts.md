@@ -35,7 +35,3 @@ Further SAR data revealed a scattering of  additional formations sprawling beyo
 
 ” According to Ciccolo, the team’s  imaging process also accurately reproduced   known underground levels of Osiris’s tomb, down  to the staircase patterns and burial niches,   proving the system’s reliability  before it unveiled anything new. But if this subterranean labyrinth truly exists,  deeper, vaster, and older than the pyramid that   sits atop it, then the question is no longer  just what was found. It’s who built it and why.
 ---
-
-
-
----
