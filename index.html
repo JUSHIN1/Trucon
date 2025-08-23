@@ -482,39 +482,6 @@
         font-size: 0.95rem;
       }
 
-      /* Lightbox */
-      .lightbox {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.92);
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        padding: 20px;
-      }
-      .lightbox img {
-        max-width: 90%;
-        max-height: 70vh;
-        border-radius: 8px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-      }
-      .lightbox-caption {
-        color: #fff;
-        margin-top: 14px;
-        max-width: 780px;
-        text-align: center;
-      }
-      .lightbox-close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 2rem;
-        color: #fff;
-        cursor: pointer;
-      }
-
       /* ===== Health Section Styling ===== */
       .health-feed {
         display: flex;
@@ -553,6 +520,164 @@
         height: 315px;
         border-radius: 12px;
         margin-top: 12px;
+      }
+
+      /* About */
+      .about-section {
+        background: linear-gradient(135deg, #090116d3, #050800e3);
+        color: #fff;
+        padding: 60px 20px;
+        border-radius: 12px;
+      }
+      .about-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        gap: 30px;
+      }
+      .about-image {
+        flex: 1 1 280px;
+        text-align: center;
+      }
+      .about-image img {
+        max-width: 260px;
+        border-radius: 50%;
+        border: 5px solid #493601ea;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
+      .about-text {
+        flex: 2 1 520px;
+      }
+      .about-text h2 {
+        font-size: 2.2rem;
+        margin: 0 0 6px;
+        color: #00c6ff;
+      }
+      .about-text h3 {
+        font-size: 1.6rem;
+        margin: 0 0 12px;
+        font-weight: 800;
+      }
+      .about-text p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+      .about-text .mission {
+        margin-top: 12px;
+        font-size: 1.15rem;
+        color: #ffdf6c;
+      }
+
+      /* Bible */
+      .verse {
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+      }
+      .verse-number {
+        font-weight: 700;
+        color: #f1fffb;
+        margin-right: 6px;
+      }
+      .verse:hover {
+        background: rgba(243, 240, 242, 0.15);
+      }
+      .verse.selected {
+        background: #ff00ff33;
+      }
+
+      /* Off-canvas (mobile) */
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        z-index: 45;
+      }
+      .drawer {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        bottom: 0;
+        width: 84vw;
+        max-width: 320px;
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+        z-index: 50;
+        overflow: auto;
+        padding: 14px;
+      }
+      .drawer .nav-links button {
+        margin: 6px 0;
+      }
+      .drawer-open .drawer {
+        transform: translateX(0);
+      }
+      .drawer-open .drawer-overlay {
+        display: block;
+      }
+
+      /* Bottom nav (mobile) */
+      .bottom-nav {
+        display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+        z-index: 60;
+      }
+      .bottom-nav .row {
+        display: flex;
+      }
+      .bottom-nav button {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #ddd;
+        padding: 10px 8px;
+        font-size: 0.9rem;
+      }
+      .bottom-nav button.active {
+        color: var(--accent);
+      }
+
+      /* Lightbox */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 20px;
+      }
+      .lightbox img {
+        max-width: 90%;
+        max-height: 70vh;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      }
+      .lightbox-caption {
+        color: #fff;
+        margin-top: 14px;
+        max-width: 780px;
+        text-align: center;
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
       }
 
       /* About */
@@ -828,9 +953,10 @@
           <button data-page="discover">Discover</button>
           <button data-page="bible">Bible</button>
           <button data-page="artifacts">Artifacts</button>
+          <button data-page="health">Health</button>
           <button data-page="altruism">Altruism</button>
           <button data-page="about">About</button>
-          <button data-page="health">Health</button>
+          <!--<button data-page="contact">Contact</button>-->
         </div>
         <div class="server-status">
           Server: <span id="serverStatus">checking...</span>
@@ -874,6 +1000,54 @@
             <div class="lightbox-caption">
               <h3 id="lightbox-title"></h3>
               <p id="lightbox-desc"></p>
+            </div>
+          </div>
+        </section>
+
+        <section id="health" class="page" style="display: none">
+          <div class="health-section">
+            <h1>Health & Wellness</h1>
+            <p class="small-muted">
+              Curated health insights, tips, and resources for a better you.
+            </p>
+            <div class="health-feed">
+              <!-- Blog 1 -->
+              <div class="health-post">
+                <h3>10 Foods That Boost Your Immune System</h3>
+                <p>
+                  Eating a balanced diet rich in fruits and vegetables can
+                  strengthen your immunity and protect against infections.
+                </p>
+                <img src="pics/fruits.jpg" alt="Healthy Foods" />
+              </div>
+
+              <!-- Blog 2 -->
+              <div class="health-post">
+                <h3>5 Minute Morning Stretch</h3>
+                <p>
+                  Start your day with these quick stretches to improve blood
+                  flow and flexibility.
+                </p>
+                <div class="health-video">
+                  <iframe
+                    src="https://www.youtube.com/embed/BHY0FxzoKZE?si=EgfQO5snar6MLGBy"
+                    title="The brain-changing benefits of exercise | Wendy Suzuki"
+                    frameborder="0"
+                    allowfullscreen
+                  >
+                  </iframe>
+                </div>
+              </div>
+
+              <!-- Blog 3 -->
+              <div class="health-post">
+                <h3>Staying Hydrated</h3>
+                <p>
+                  Drinking enough water daily keeps your body energized, helps
+                  digestion, and supports brain function.
+                </p>
+                <img src="pics/water.jpg" alt="Stay Hydrated" />
+              </div>
             </div>
           </div>
         </section>
@@ -1073,52 +1247,36 @@
           </div>
         </section>
 
-        <!-- Health -->
-        <section id="health" class="page" style="display: none">
-          <div class="health-section">
-            <h1>Health & Wellness</h1>
-            <p class="small-muted">
-              Curated health insights, tips, and resources for a better you.
-            </p>
-            <div class="health-feed">
-              <!-- Blog 1 -->
-              <div class="health-post">
-                <h3>10 Foods That Boost Your Immune System</h3>
-                <p>
-                  Eating a balanced diet rich in fruits and vegetables can
-                  strengthen your immunity and protect against infections.
-                </p>
-                <img src="pics/fruits.jpg" alt="Healthy Foods" />
-              </div>
-
-              <!-- Blog 2 -->
-              <div class="health-post">
-                <h3>5 Minute Morning Stretch</h3>
-                <p>
-                  Start your day with these quick stretches to improve blood
-                  flow and flexibility.
-                </p>
-                <div class="health-video">
-                  <iframe
-                    src="https://www.youtube.com/embed/BHY0FxzoKZE?si=EgfQO5snar6MLGBy"
-                    title="The brain-changing benefits of exercise | Wendy Suzuki"
-                    frameborder="0"
-                    allowfullscreen
-                  >
-                  </iframe>
-                </div>
-              </div>
-
-              <!-- Blog 3 -->
-              <div class="health-post">
-                <h3>Staying Hydrated</h3>
-                <p>
-                  Drinking enough water daily keeps your body energized, helps
-                  digestion, and supports brain function.
-                </p>
-                <img src="pics/water.jpg" alt="Stay Hydrated" />
-              </div>
-            </div>
+        <!-- Contact -->
+        <section id="contact" class="page" style="display: none">
+          <h1>Contact</h1>
+          <div
+            class="rightbar card"
+            style="
+              position: static;
+              border: none;
+              background: transparent;
+              padding: 0;
+            "
+          >
+            <form
+              id="contactForm"
+              onsubmit="submitContact(event)"
+              class="donation-form"
+              style="max-width: 640px"
+            >
+              <input id="contactName" placeholder="Your name" required />
+              <input id="contactEmail" placeholder="Email (optional)" />
+              <textarea
+                id="contactMessage"
+                rows="4"
+                placeholder="Message"
+                required
+                style="resize: vertical"
+              ></textarea>
+              <button class="btn" style="margin-top: 8px">Save</button>
+            </form>
+            <div id="savedMessages" style="margin-top: 12px"></div>
           </div>
         </section>
       </main>
@@ -1196,6 +1354,7 @@
         <button data-page="discover">Discover</button>
         <button data-page="bible">Bible</button>
         <button data-page="artifacts">Artifacts</button>
+        <!--<button data-page="contact">Contact</button> -->
         <button data-page="health">Health</button>
       </div>
     </nav>
@@ -1930,7 +2089,7 @@
           title: "Terracotta Army",
           description:
             "A collection of terracotta sculptures depicting the armies of Qin Shi Huang, the first Emperor of China.",
-          image: "pics/terracotta-army.jpg",
+          image: "pics/teraotta-army.jpg",
         },
         {
           title: "Dead Sea Scrolls",
