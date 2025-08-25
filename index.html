@@ -102,14 +102,14 @@
       /* Sidebar (drawer on mobile) */
       .sidebar {
         grid-area: sidebar;
-        backgroung:#333333;
+        background:var(--panel);
         border-right: 1px solid var(--border);
         padding: 16px;
         overflow: auto;
       }
       .sidebar .nav-links button {
         width: 100%;
-        background: #333333;
+        background: transparent;
         border: 1px solid var(--border);
         color: #eaeaea;
         padding: 12px;
@@ -191,7 +191,7 @@
       }
       .hero {
         background: linear-gradient(
-          90deg,#333333,
+          90deg,
           rgba(29, 161, 242, 0.08),
           transparent
         );
@@ -288,7 +288,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #333333;
+        background: rgba(0, 0, 0, 0.07);
         z-index: 1200;
         padding: 20px;
       }
@@ -370,7 +370,7 @@
 
       /* Altruism */
       .altruism-section {
-        background: var(--panel),#333333;
+        background: var(--panel);
         padding: 18px;
         border-radius: 12px;
         border: 1px solid var(--border);
